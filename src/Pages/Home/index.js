@@ -2,12 +2,9 @@ import React, {useState} from "react"
 import { Nav } from '../../components'
 import { motion } from "framer-motion";
 import CloseIcon from '@mui/icons-material/Close';
-import { Button , Box, FormControl, InputLabel, Input, FormHelperText} from "@mui/material";
-import TextField from '@mui/material/TextField';
+import { Button , FormControl, InputLabel, Input, FormHelperText} from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
 
-
-import {JoinForm} from '../../components'
 import './style.css'
 
 const Home = () => {
