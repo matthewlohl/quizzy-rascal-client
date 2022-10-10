@@ -1,0 +1,23 @@
+.home-main{
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.instructions{
+    margin-top: 3rem;
+}
+
+.square{
+    font-size: 3rem;
+    margin: 4rem 0rem;
+    padding: 6rem 5rem;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    width: 25rem;
+    border-radius: 30px;
+}
+
+.square:hover{
+    cursor: pointer;
+}
