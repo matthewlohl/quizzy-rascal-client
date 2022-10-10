@@ -2,6 +2,7 @@ import { Grid, Paper } from "@mui/material";
 // import { Grid, Row, Col } from 'rsuite';
 import axios from "axios";
 import React, { useEffect, useState } from "react"
+import { motion } from "framer-motion"
 import './style.css'
 
 
@@ -16,7 +17,6 @@ const Questions = () => {
               const data = await axios.get(`https://opentdb.com/api.php?amount=10`)
               var questions = data.data.results
               setQuestionsData(questions)
-              console.log(questions)
               
             } catch (error) {
               console.log(error)           
@@ -32,8 +32,6 @@ const Questions = () => {
         wrong.forEach((item) => {
             choice.push(item)
         })
-   
-        console.log(choice)
 
         let shuffledChoice = choice.sort(function() {
             return Math.random() - 0.5;
@@ -41,7 +39,7 @@ const Questions = () => {
         const renderChoice = shuffledChoice.map((item, index) => {
             return(
                 <Grid item xs={6} key={index}>
-                    <Paper className="choice">{item}</Paper>
+                    <motion.div whileHover={{ scale: 1.1, backgroundColor: '#6A5AE0', color: 'aliceblue'}} transition={{ type: "spring", stiffness: 100, damping: 10 }} className="choice">{item}</motion.div>
                 </Grid>
             )
         })
@@ -52,24 +50,12 @@ const Questions = () => {
                 <div className="question-card">
                     <h2 style={{textAlign: 'center'}}>{question.question}</h2>
                     {/* <p>{shuffledChoice}</p> */}
-                    <p>Correct: {question.correct_answer}</p>
+                    <p style={{color: 'aliceblue'}}>Correct: {question.correct_answer}</p>
                     {/* <p>Wrong: {question.incorrect_answers}</p> */}
 
                     <form action="">
                     <Grid container className='grid' rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                         {renderChoice}
-                        {/* <Grid item xs={6}>
-                        <Paper className="choice">{shuffledChoice[0]}</Paper>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Paper className="choice">{shuffledChoice[1]}</Paper>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Paper className="choice">{shuffledChoice[2]}</Paper>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Paper className="choice">{shuffledChoice[3]}</Paper>
-                        </Grid>  */}
                     </Grid>
                     </form>
 
