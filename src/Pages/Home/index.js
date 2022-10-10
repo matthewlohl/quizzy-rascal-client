@@ -3,7 +3,7 @@ import { Nav } from '../../components'
 import { motion } from "framer-motion";
 import CloseIcon from '@mui/icons-material/Close';
 import { Button , FormControl, InputLabel, Input, MenuItem, FormHelperText} from "@mui/material";
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import SendIcon from '@mui/icons-material/Send';
 
 import './style.css'
