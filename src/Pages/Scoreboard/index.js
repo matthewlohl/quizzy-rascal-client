@@ -1,5 +1,6 @@
 import React from "react"
-import { Grid, Divider } from "@mui/material";
+import { Button, Grid, Divider } from "@mui/material";
+import { Link } from "react-router-dom";
 import trophyIcon from './trophy-icon.png';
 import './style.css'
 
@@ -66,6 +67,9 @@ const Scoreboard = () => {
 
 
   return (
+    <>
+    <Link to='/'><Button variant="outlined" className="backHomeBtn" sx={{position: 'absolute', marginTop: '4rem'}}>Back to Home</Button></Link>
+
     <div className="scorepage">
     <section></section>
     <div className="imgContainer">
@@ -89,6 +93,7 @@ const Scoreboard = () => {
             {renderResult}
       </section>
     </div>
+    </>
   )
 };
 
