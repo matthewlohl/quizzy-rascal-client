@@ -11,13 +11,51 @@
     font-size: 3rem;
     margin: 4rem 0rem;
     padding: 6rem 5rem;
-    display: flex;
+    display: none;
     text-align: center;
     align-items: center;
     width: 25rem;
     border-radius: 30px;
 }
 
+.square.active{
+    display: flex;
+}
+
 .square:hover{
     cursor: pointer;
+}
+
+.closeBtn:hover{
+    cursor: pointer;
+}
+
+.form-container{
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    right: 20%;
+    background-color: #5ED6BE;
+    z-index: 2;
+    height: 60%;
+    margin-bottom: 2rem;
+    padding: 2.5rem 3rem;
+    display: none;
+    border-radius: 30px;
+    box-shadow: 5px 5px 40px#5ED6BE;
+}
+
+.form-container.active{
+    display: block;
+}
+
+
+.form{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.form Input {
+    margin-top: 2rem;
 }
