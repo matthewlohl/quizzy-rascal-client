@@ -3,47 +3,21 @@ import { socket } from '../../socket/index.js';
 import React, { useEffect, useState } from "react"
 import { useLocation } from 'react-router-dom';
 import { motion } from "framer-motion"
-import Button from '@mui/material/Button'
-import SendIcon from '@mui/icons-material/Send';
+// import Button from '@mui/material/Button'
+// import SendIcon from '@mui/icons-material/Send';
 import './style.css'
+// import { render } from "@testing-library/react";
 
 
 const Questions = () => {
     const [questionsData, setQuestionsData] = useState([])
+    const [seconds, setSeconds] = useState(0);
 
     // STATE TO STORE USER INPUT
-    // const [q1choice, setQ1Choice] = useState()
-    // const [q2choice, setQ2Choice] = useState()
-    // const [q1choice, setQ1Choice] = useState()
-    // const [q1choice, setQ1Choice] = useState()
-    // const [q1choice, setQ1Choice] = useState()
-    // const [q1choice, setQ1Choice] = useState()
-    // const [q1choice, setQ1Choice] = useState()
-    // const [q1choice, setQ1Choice] = useState()
-    // const [q1choice, setQ1Choice] = useState()
     // const [q1choice, setQ1Choice] = useState()
 
     const location = useLocation();
     const roomName = location.state.roomName
-
-    // OLD WAY TO GET QUESTIONS - DIRECT API CALL
-    // useEffect(() => {
-
-
-    //     const fetchQuestions = async() => {
-    //         try {
-    //           console.log(`grabbing from API`)
-    //           const data = await axios.get("https://opentdb.com/api.php?amount=10&category=9&difficulty=medium&type=multiple")
-    //           console.log(data)
-    //           var questions = data.data.results
-    //           setQuestionsData(questions)
-              
-    //         } catch (error) {
-    //           console.log(error)           
-    //         }
-    //     }
-    //     fetchQuestions()
-    // }, [])
 
     //NEW WAY TO GET QUESTIONS - DELIVERED VIA SOCKETS FROM SERVER
     useEffect(() => {
@@ -55,95 +29,118 @@ const Questions = () => {
       }, [roomName])
 
 
-    const renderQuestions = questionsData.map((question, index) => {
-        var choice= [question.correct_answer]
-        const wrong = question.incorrect_answers
-        wrong.forEach((item) => {
-            choice.push(item)
-        })
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setSeconds(seconds => seconds + 5);
+        }, 5000)
+        return() => clearInterval(interval)
+    })
 
-        let shuffledChoice = choice.sort(function() {
-            return Math.random() - 0.5;
-        })
+    
+    
+    console.log(`${seconds}s have elapsed since mounting`)
 
-        const checkCorrectness = (event) => {
-            if ( event.target.textContent === question.correct_answer){
-                console.log(`Correct Answer!`)
-                
-                
-            } else {
-                console.log(`Incorrect Answer!`)
+         for (let i=0; i < questionsData.length; i++){
+
+
+            var choice= [questionsData[i].correct_answer]
+            const wrong = questionsData[i].incorrect_answers
+            for (let n = 0; n < wrong.length; n++){
+                choice.push(wrong[n])
             }
-        }
-
-        
-
-        const renderChoice = shuffledChoice.map((item, index) => {
-
-            const handleUserSelection = (event) => {
             
-                var otherChoice = document.querySelectorAll('.selected')
-                otherChoice.forEach(choice => {
-                    choice.classList.remove('selected');
-                })
-                
-                // otherChoice.classList.value = 'choice'
-                event.target.classList.toggle('selected')
-                let className = event.target.classList.value
-                // const choice = event.target.textContent
-                console.log(className)
-                
-                // if (className === 'choice selected') {setQ1Choice(choice)}
-                // console.log(q1choice)
-                // console.log(question.correct_answer)
-                
-                
+        
+            let shuffledChoice = choice.sort(function() {
+                return Math.random() - 0.5;
+            })
+        
+            const checkCorrectness = (event) => {
+                if ( event.target.textContent === questionsData[i].correct_answer){
+                    console.log(`Correct Answer!`)
+                    
+                    
+                } else {
+                    console.log(`Incorrect Answer!`)
+                }
             }
-
-
-            return(
-                <Grid item xs={6} key={index}  >
-                    <motion.div
-                    onTap={handleUserSelection}
-                    className='choice'
-                    onClick={checkCorrectness}
-                    >{item}</motion.div>
-                </Grid>
-            )
-        })
-
-        return(
-            <div className="question-container" key={index}>
-                <h1>Question {index+1}</h1>
-                <div className="question-card">
-                    <h2 style={{textAlign: 'center'}}>{question.question}</h2>
-                    <p style={{color: 'aliceblue'}}>Correct: {question.correct_answer}</p>
-
-
-                    <form action="">
-                    <Grid container className='grid' rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                        {renderChoice}
+        
+        
+            const renderChoice = shuffledChoice.map((item, index) => {
+        
+                const handleUserSelection = (event) => {
+                
+                    var otherChoice = document.querySelectorAll('.selected')
+                    otherChoice.forEach(choice => {
+                        choice.classList.remove('selected');
+                    })
+                    
+                    event.target.classList.toggle('selected')
+                    let className = event.target.classList.value
+        
+                    console.log(className)  
+                }
+        
+        
+                return(
+                    <Grid item xs={6} key={index}  >
+                        <motion.div
+                        onTap={handleUserSelection}
+                        className='choice'
+                        onClick={checkCorrectness}
+                        >{item}</motion.div>
                     </Grid>
-                    </form>
-
+                )
+            })
+            
+            return(
+                <div className="question-container">
+                    <h1>Question {i+1}</h1>
+                    <div className="question-card">
+                        <h2 style={{textAlign: 'center'}}>{questionsData[i].question}</h2>
+                        <p style={{color: 'aliceblue'}}>Correct: {questionsData[i].correct_answer}</p>
+        
+        
+                        <form action="">
+                        <Grid container className='grid' rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                            {renderChoice}
+                        </Grid>
+                        </form>
+        
+                    </div>
                 </div>
-            </div>
-        )
-    }) 
+            )
+            
+        //  }
+            
+            
+            
+        // }
+        }
     
 
-  return (
-    <main className="questions-section">
-      {renderQuestions}
-      <Grid container sx={{display: 'flex', justifyContent: 'center'}} textAlign="center">
-        <Button variant="contained" justifyContent='center' size="large" endIcon={<SendIcon />}
-        // onClick={}
-        >
-            Submit
-        </Button>
-      </Grid>
-    </main>
-  )
-};
+    }
+        
+        // console.log(`${seconds}s have elapsed since mounting`)
+
+
+
+    
+
+//   return (
+//     <main className="questions-section">
+//       {renderQuestions}
+//       <Grid container sx={{display: 'flex', justifyContent: 'center'}} textAlign="center">
+//         <Button variant="contained" justifyContent='center' size="large" endIcon={<SendIcon />}
+//         // onClick={}
+//         >
+//             Submit
+//         </Button>
+//       </Grid>
+//     </main>
+//   )
+        
+    
+    
+// };
 
 export default Questions;
