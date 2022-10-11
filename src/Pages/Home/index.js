@@ -84,7 +84,11 @@ const Home = () => {
 
     const gameDetails =  {
       roomName: room,
-      playerName: name
+      playerName: name,
+      difficulty: "hard",
+      category: "7"
+      
+
     }
 
     // implement check room name is available
