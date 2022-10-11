@@ -1,28 +1,43 @@
 import { Grid } from "@mui/material";
-import axios from "axios";
+import { socket } from '../../socket/index.js';
 import React, { useEffect, useState } from "react"
+import { useLocation } from 'react-router-dom';
 import { motion } from "framer-motion"
 import './style.css'
 
 
 const Questions = () => {
     const [questionsData, setQuestionsData] = useState([])
+    const location = useLocation();
+    const roomName = location.state.roomName
+
+    // OLD WAY TO GET QUESTIONS - DIRECT API CALL
+    // useEffect(() => {
 
 
-    useEffect(() => {
-        const fetchQuestions = async() => {
-            try {
-              console.log(`grabbing from API`)
-              const data = await axios.get(`https://opentdb.com/api.php?amount=10`)
-              var questions = data.data.results
-              setQuestionsData(questions)
+    //     const fetchQuestions = async() => {
+    //         try {
+    //           console.log(`grabbing from API`)
+    //           const data = await axios.get("https://opentdb.com/api.php?amount=10&category=9&difficulty=medium&type=multiple")
+    //           console.log(data)
+    //           var questions = data.data.results
+    //           setQuestionsData(questions)
               
-            } catch (error) {
-              console.log(error)           
-            }
-        }
-        fetchQuestions()
-    }, [])
+    //         } catch (error) {
+    //           console.log(error)           
+    //         }
+    //     }
+    //     fetchQuestions()
+    // }, [])
+
+    //NEW WAY TO GET QUESTIONS - DELIVERED VIA SOCKETS FROM SERVER
+    useEffect(() => {
+        socket.emit("getQuestions", roomName)
+
+        socket.on("questions", (data, host) => {
+            setQuestionsData(data)
+        })
+      }, [roomName])
 
 
     const renderQuestions = questionsData.map((question, index) => {
