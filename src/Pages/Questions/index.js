@@ -3,11 +3,26 @@ import { socket } from '../../socket/index.js';
 import React, { useEffect, useState } from "react"
 import { useLocation } from 'react-router-dom';
 import { motion } from "framer-motion"
+import Button from '@mui/material/Button'
+import SendIcon from '@mui/icons-material/Send';
 import './style.css'
 
 
 const Questions = () => {
     const [questionsData, setQuestionsData] = useState([])
+
+    // STATE TO STORE USER INPUT
+    // const [q1choice, setQ1Choice] = useState()
+    // const [q2choice, setQ2Choice] = useState()
+    // const [q1choice, setQ1Choice] = useState()
+    // const [q1choice, setQ1Choice] = useState()
+    // const [q1choice, setQ1Choice] = useState()
+    // const [q1choice, setQ1Choice] = useState()
+    // const [q1choice, setQ1Choice] = useState()
+    // const [q1choice, setQ1Choice] = useState()
+    // const [q1choice, setQ1Choice] = useState()
+    // const [q1choice, setQ1Choice] = useState()
+
     const location = useLocation();
     const roomName = location.state.roomName
 
@@ -50,10 +65,49 @@ const Questions = () => {
         let shuffledChoice = choice.sort(function() {
             return Math.random() - 0.5;
         })
+
+        const checkCorrectness = (event) => {
+            if ( event.target.textContent === question.correct_answer){
+                console.log(`Correct Answer!`)
+                
+                
+            } else {
+                console.log(`Incorrect Answer!`)
+            }
+        }
+
+        
+
         const renderChoice = shuffledChoice.map((item, index) => {
+
+            const handleUserSelection = (event) => {
+            
+                var otherChoice = document.querySelectorAll('.selected')
+                otherChoice.forEach(choice => {
+                    choice.classList.remove('selected');
+                })
+                
+                // otherChoice.classList.value = 'choice'
+                event.target.classList.toggle('selected')
+                let className = event.target.classList.value
+                // const choice = event.target.textContent
+                console.log(className)
+                
+                // if (className === 'choice selected') {setQ1Choice(choice)}
+                // console.log(q1choice)
+                // console.log(question.correct_answer)
+                
+                
+            }
+
+
             return(
-                <Grid item xs={6} key={index}>
-                    <motion.div whileHover={{ scale: 1.1, backgroundColor: '#6A5AE0', color: 'aliceblue'}} transition={{ type: "spring", stiffness: 100, damping: 10 }} className="choice">{item}</motion.div>
+                <Grid item xs={6} key={index}  >
+                    <motion.div
+                    onTap={handleUserSelection}
+                    className='choice'
+                    onClick={checkCorrectness}
+                    >{item}</motion.div>
                 </Grid>
             )
         })
@@ -63,9 +117,8 @@ const Questions = () => {
                 <h1>Question {index+1}</h1>
                 <div className="question-card">
                     <h2 style={{textAlign: 'center'}}>{question.question}</h2>
-                    {/* <p>{shuffledChoice}</p> */}
                     <p style={{color: 'aliceblue'}}>Correct: {question.correct_answer}</p>
-                    {/* <p>Wrong: {question.incorrect_answers}</p> */}
+
 
                     <form action="">
                     <Grid container className='grid' rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
@@ -82,7 +135,13 @@ const Questions = () => {
   return (
     <main className="questions-section">
       {renderQuestions}
-     
+      <Grid container sx={{display: 'flex', justifyContent: 'center'}} textAlign="center">
+        <Button variant="contained" justifyContent='center' size="large" endIcon={<SendIcon />}
+        // onClick={}
+        >
+            Submit
+        </Button>
+      </Grid>
     </main>
   )
 };

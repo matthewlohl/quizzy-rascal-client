@@ -33,4 +33,18 @@
     color: #6A5AE0;
     border-radius: 50px;
     margin: 1rem 2rem;
+    transition: all 0.5s ease-in-out;
+}
+
+.choice.selected{
+    background-color: #6A5AE0;
+    /* background-color: black;*/
+    color: aliceblue;
+}
+
+.choice:hover{
+    transform: scale(1.1);
+    background-color: #6A5AE0;
+    color: aliceblue;
+
 }
