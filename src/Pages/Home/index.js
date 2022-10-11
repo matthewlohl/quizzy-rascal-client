@@ -1,4 +1,5 @@
 import React, {useState} from "react"
+import { useNavigate } from 'react-router-dom'
 import { Nav } from '../../components'
 import { motion } from "framer-motion";
 import CloseIcon from '@mui/icons-material/Close';
@@ -6,9 +7,12 @@ import { Button , FormControl, InputLabel, Input, MenuItem, FormHelperText} from
 import Select from '@mui/material/Select';
 import SendIcon from '@mui/icons-material/Send';
 
+import { socket } from '../../socket/index.js';
 import './style.css'
 
 const Home = () => {
+  const navigate = useNavigate()
+
   const [joinFormactive, setjoinFormActive] = useState(0)
   const [createFormactive, setcreateFormActive] = useState(0)
 
@@ -30,6 +34,26 @@ const Home = () => {
 
   const handleJoinGame = (e) => {
     e.preventDefault()
+
+    const gameDetails =  {
+      roomName: room,
+      playerName: name
+    }
+
+    // implement check room name is available
+    if (room !== "") {
+      socket.emit("join", gameDetails, (res) => {
+        
+        console.log("socket response", res);
+
+        if (res.code === "success") {
+          navigate('/lobby', {state: {gameDetails}})
+        } else {
+          setRoom('');
+        }
+      })
+    }
+
     console.log(`I will prompt user to questions page - Specific Room`)
     console.log(`Name stored in useState: ${name}`)
     console.log(`Room stored in useState: ${room}`)
@@ -57,6 +81,26 @@ const Home = () => {
 
   const handleCreateGame =(e) => {
     e.preventDefault()
+
+    const gameDetails =  {
+      roomName: room,
+      playerName: name
+    }
+
+    // implement check room name is available
+    if (room !== "") {
+      socket.emit("create", gameDetails, (res) => {
+        
+        console.log("socket response", res);
+
+        if (res.code === "success") {
+          navigate('/lobby', {state: {gameDetails}})
+        } else {
+          setRoom('');
+        }
+      })
+    }
+
     console.log(`I will prompt user to questions page - New Quiz`)
     console.log(`Category stored in useState: ${category}`)
     console.log(`Difficulty stored in useState: ${difficulty}`)
@@ -80,7 +124,7 @@ const Home = () => {
         <h3>
             <ol>
                 <li>Select a mode</li>
-                <li>Each mdoe has 10 questions</li>
+                <li>Each mode has 10 questions</li>
                 <li>Top 10 winners will be on the scoreboard</li>
             </ol>
         </h3>
@@ -150,6 +194,18 @@ const Home = () => {
           <div>
 
               <FormControl component="form" className='form' onSubmit={handleCreateGame} >
+              <InputLabel htmlFor="name" aria-label="name"></InputLabel>
+                <Input type="text" id="name"  aria-describedby="name" placeholder="Input your name"
+                onChange={handleChangeName}></Input>
+                <FormHelperText id="name">Input name</FormHelperText>
+
+                <FormControl>
+                <InputLabel htmlFor="room" aria-label="room"></InputLabel>
+                <Input type="text" id="room"  aria-describedby="room number" placeholder="Input room number"
+                onChange={handleChangeRoom}
+                ></Input>
+                </FormControl>
+                <FormHelperText id="room">Input room</FormHelperText>
               
 
                 <FormControl fullWidth>
@@ -204,7 +260,7 @@ const Home = () => {
                   </Select>
                 </FormControl>
 
-                <Button sx={{borderRadius: '20px', mt:4}} variant="contained" type="submit" color="success" endIcon={<SendIcon />}>Join Game</Button>
+                <Button sx={{borderRadius: '20px', mt:4}} variant="contained" type="submit" color="success" endIcon={<SendIcon />}>Create Game</Button>
 
               </FormControl>
           </div>
