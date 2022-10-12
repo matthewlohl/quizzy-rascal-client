@@ -12,8 +12,8 @@ const Nav = () => {
       <Grid container
       style={{alignItems: 'center', justifyContent: 'center'}}
       >
-        <Avatar alt="logo" src={logo} style={{width: 100, height: 100}}/>
-        <p style={{color: 'gray', fontWeight: '500', textTransform: 'uppercase'}} >Quizzy Rascal</p>
+        <Avatar alt="logo" src={logo} role="Logo" style={{width: 100, height: 100}}/>
+        <p role="siteName" style={{color: 'gray', fontWeight: '500', textTransform: 'uppercase'}} >Quizzy Rascal</p>
       </Grid>
 
      

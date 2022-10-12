@@ -124,7 +124,7 @@ const Home = () => {
     <div>
       <Nav />
       <section className="instructions">
-        <h1>Instructions</h1>
+        <h1 role='Instructions'>Instructions</h1>
         <h3>
             <ol>
                 <li>Select a mode</li>
@@ -139,6 +139,7 @@ const Home = () => {
         <motion.div className={(joinFormactive || createFormactive) ? 'joinGame square' : 'active joinGame square'}
         style={{backgroundColor: '#5ED6BE', color: 'white', boxShadow: '5px 5px 30px grey'}}
         whileHover={{ scale: 1.1}} transition={{ type: "spring", stiffness: 100, damping: 10 }}
+        role='Join'
         onClick={promptRoomInput}
         >
             Join a Game
@@ -147,6 +148,7 @@ const Home = () => {
         <motion.div className={(joinFormactive || createFormactive) ? 'createGame square' : 'active createGame square'}
         style={{backgroundColor: '#DD92BF', color: 'white', boxShadow: '5px 5px 30px grey'}}
         whileHover={{ scale: 1.1}} transition={{ type: "spring", stiffness: 100, damping: 10 }}
+        role='Create'
         onClick={promptCreateGame}
         >
             Create new Game
@@ -155,13 +157,13 @@ const Home = () => {
 
         <div className={joinFormactive ? 'active inputForm-container' : 'inputForm-container'}  >
           <div style={{display: 'flex', justifyContent: 'flex-end', paddingBottom: '3rem'}}>
-            <CloseIcon className='closeBtn' style={{right: '0px'}} onClick={closePrompt}/>
+            <CloseIcon className='closeBtn' style={{right: '0px'}} role='closeBtn' onClick={closePrompt}/>
           </div>
           <div>
 
-              <FormControl component="form" className='form' onSubmit={handleJoinGame} >
+              <FormControl component="form" className='form' onSubmit={handleJoinGame} role='form' data-testid="joinForm ">
                 <InputLabel htmlFor="name" aria-label="name"></InputLabel>
-                <Input type="text" id="name"  aria-describedby="name" placeholder="Input your name"
+                <Input type="text" id="name"  aria-describedby="joinName" placeholder="Input your name" role='inputNameToJoin'
                 onChange={handleChangeName}></Input>
                 <FormHelperText id="name">Input name</FormHelperText>
 
@@ -219,6 +221,7 @@ const Home = () => {
                     id="demo-simple-select"
                     value={category}
                     label="Category"
+                    role='dropdownCategory'
                     onChange={handleChangeCategory}
                   >
                     <MenuItem value={'9'}>General Knowledge</MenuItem>
@@ -240,6 +243,7 @@ const Home = () => {
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
+                    role="dropdownDifficulty"
                     value={difficulty}
                     label="Difficulty"
                     onChange={handleChangeDifficulty}
@@ -255,6 +259,7 @@ const Home = () => {
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
+                    role="dropdownType"
                     value={type}
                     label="Question Type"
                     onChange={handleChangeType}
