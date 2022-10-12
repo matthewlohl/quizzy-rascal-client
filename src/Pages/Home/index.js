@@ -88,6 +88,7 @@ const Home = () => {
       difficulty: difficulty,
       type: type,
       category: category
+
     }
 
     // implement check room name is available
