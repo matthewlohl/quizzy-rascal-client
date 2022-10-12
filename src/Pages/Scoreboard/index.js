@@ -26,34 +26,6 @@ const Scoreboard = () => {
 
     const [category, setCategory] = useState("")
 
-    // const data = [
-    //     {
-    //         name: 'Liam',
-    //         score: '8',
-    //         date: '08/10/2022'
-    //     },
-    //     {
-    //         name: 'Karl',
-    //         score: '10',
-    //         date: '09/10/2022'
-    //     },
-    //     {
-    //         name: 'Matt',
-    //         score: '5',
-    //         date: '01/10/2022'
-    //     },
-    //     {
-    //         name: 'Ayo',
-    //         score: '9',
-    //         date: '24/09/2022'
-    //     },
-    //     {
-    //         name: 'Mike',
-    //         score: '6',
-    //         date: '28/05/2022'
-    //     }
-    // ]
-
     useEffect(() => {
         const fetchHighScore = async() => {
           try {

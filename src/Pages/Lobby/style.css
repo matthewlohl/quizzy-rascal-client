@@ -31,6 +31,18 @@
     position: relative;
     box-shadow: 5px 5px 30px grey;
 }
+.winner { 
+    background-color: #DD92BF;
+    border-radius: 30%;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 5px 5px 30px grey;
+}
 
 .start{
     display: grid;
@@ -40,6 +52,16 @@
 .item{
     margin-top: 30px;
     grid-column-start: 2;
+}
+
+.results {
+    display: flex;
+}
+
+.position {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 20px;
 }
 
 @keyframes bubble-bounce {
