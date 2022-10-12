@@ -11,19 +11,19 @@ import { Nav } from '../../components'
 const Lobby = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { roomName, playerName } = location.state.gameDetails
+    const gameDetails = location.state.gameDetails
 
     const [playerDetails, setPlayerDetails] = useState([])
     const [hostName, setHost] = useState("")
 
     useEffect(() => {
-      socket.emit("lobby", roomName)
+      socket.emit("lobby", gameDetails.roomName)
       socket.on("playerData", (players, host) => {
         setPlayerDetails(players)
         setHost(host)
       })
-      socket.on("begin", () => navigate('/questions', {state: {roomName}}))
-    }, [roomName, navigate])
+      socket.on("begin", (data) => navigate('/questions', {state: {data, gameDetails}}))
+    }, [navigate, gameDetails])
 
     const lobbyPlayers = (player) => {
       console.log(hostName)
@@ -39,21 +39,21 @@ const Lobby = () => {
     }
 
     const startGame = () => {
-      socket.emit("startGame", roomName)
+      socket.emit("startGame", gameDetails.roomName)
     }
   
     return (
       <div>
         <Nav />
         <section className="instructions">
-          <h1>Room Name: {roomName}</h1>
+          <h1>Room Name: {gameDetails.roomName}</h1>
           <h2>The following players are currently waiting in the lobby:</h2>
         </section>
         <main className="home-main">
           {playerDetails.map(lobbyPlayers)}
         </main>
         <div className="start">
-            {(playerName === hostName) 
+            {(gameDetails.playerName === hostName) 
             ?
             <Button className="item" sx={{borderRadius: '20px', mt:4}} variant="contained" type="submit" color="success" onClick={startGame} endIcon={<SendIcon />}>Start Game</Button>
             : 

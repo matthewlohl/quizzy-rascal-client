@@ -84,7 +84,10 @@ const Home = () => {
 
     const gameDetails =  {
       roomName: room,
-      playerName: name
+      playerName: name,
+      difficulty: difficulty,
+      type: type,
+      category: category
     }
 
     // implement check room name is available
@@ -217,17 +220,17 @@ const Home = () => {
                     label="Category"
                     onChange={handleChangeCategory}
                   >
-                    <MenuItem value={9}>General Knowledge</MenuItem>
-                    <MenuItem value={10}>Entertainment: Books</MenuItem>
-                    <MenuItem value={11}>Entertainment: Film</MenuItem>
-                    <MenuItem value={12}>Entertainment: Music</MenuItem>
-                    <MenuItem value={13}>Entertainment: Musicals & Theatres</MenuItem>
-                    <MenuItem value={14}>Entertainment: Television</MenuItem>
-                    <MenuItem value={15}>Entertainment: Video Games</MenuItem>
-                    <MenuItem value={16}>Entertainment: Board Games</MenuItem>
-                    <MenuItem value={17}>Science & Nature</MenuItem>
-                    <MenuItem value={18}>Science: Computers</MenuItem>
-                    <MenuItem value={19}>Science: Mathematics</MenuItem>
+                    <MenuItem value={'9'}>General Knowledge</MenuItem>
+                    <MenuItem value={'10'}>Entertainment: Books</MenuItem>
+                    <MenuItem value={'11'}>Entertainment: Film</MenuItem>
+                    <MenuItem value={'12'}>Entertainment: Music</MenuItem>
+                    <MenuItem value={'13'}>Entertainment: Musicals & Theatres</MenuItem>
+                    <MenuItem value={'14'}>Entertainment: Television</MenuItem>
+                    <MenuItem value={'15'}>Entertainment: Video Games</MenuItem>
+                    <MenuItem value={'16'}>Entertainment: Board Games</MenuItem>
+                    <MenuItem value={'17'}>Science & Nature</MenuItem>
+                    <MenuItem value={'18'}>Science: Computers</MenuItem>
+                    <MenuItem value={'19'}>Science: Mathematics</MenuItem>
                   </Select>
                 </FormControl>
 
