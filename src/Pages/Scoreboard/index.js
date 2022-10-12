@@ -11,17 +11,17 @@ const Scoreboard = () => {
 
     const options = [
         { label: 'All', value:""},
-        { label: 'General Knowledge', value: 'genKnow' },
-        { label: 'Books', value: 'books' },
-        { label: 'Film', value: 'film' },
-        { label: 'Music', value: 'music' },
-        { label: 'Musicals & Theatre', value: 'musicals' },
-        { label: 'Television', value: 'tv' },
-        { label: 'Video Games', value: 'vg' },
-        { label: 'Board Games', value: 'bg' },
-        { label: 'Science & Nature', value: 'science' },
-        { label: 'Computers', value: 'computers' },
-        { label: 'Mathematics', value: 'maths' }
+        { label: 'General Knowledge', value: '9' },
+        { label: 'Books', value: '10' },
+        { label: 'Film', value: '11' },
+        { label: 'Music', value: '12' },
+        { label: 'Musicals & Theatre', value: '13' },
+        { label: 'Television', value: '14' },
+        { label: 'Video Games', value: '15' },
+        { label: 'Board Games', value: '16' },
+        { label: 'Science & Nature', value: '17' },
+        { label: 'Computers', value: '18' },
+        { label: 'Mathematics', value: '19' }
       ];
 
     const [category, setCategory] = useState("")
