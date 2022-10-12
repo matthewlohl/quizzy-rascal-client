@@ -1,157 +1,94 @@
-import { Grid } from "@mui/material";
-import { socket } from '../../socket/index.js';
-import React, { useEffect, useState } from "react"
-import { useLocation } from 'react-router-dom';
-import { motion } from "framer-motion"
-import Button from '@mui/material/Button'
-import SendIcon from '@mui/icons-material/Send';
-import './style.css'
+import React, { useState, useEffect } from "react"
+import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios'
 
+import './index.css';
+// import { render } from "@testing-library/react";
 
 const Questions = () => {
-    const [questionsData, setQuestionsData] = useState([]);
-    const [ticks, setTicks] = useState(0);
-
-    // STATE TO STORE USER INPUT
-    // const [q1choice, setQ1Choice] = useState()
-    // const [q2choice, setQ2Choice] = useState()
-    // const [q1choice, setQ1Choice] = useState()
-    // const [q1choice, setQ1Choice] = useState()
-    // const [q1choice, setQ1Choice] = useState()
-    // const [q1choice, setQ1Choice] = useState()
-    // const [q1choice, setQ1Choice] = useState()
-    // const [q1choice, setQ1Choice] = useState()
-    // const [q1choice, setQ1Choice] = useState()
-    // const [q1choice, setQ1Choice] = useState()
-
     const location = useLocation();
-    const roomName = location.state.roomName
+    const navigate = useNavigate();
+    const questions = location.state.data
+    const gameDetails = location.state.gameDetails
 
-    // OLD WAY TO GET QUESTIONS - DIRECT API CALL
-    // useEffect(() => {
+	const [currentQuestion, setCurrentQuestion] = useState(0);
+	const [showScore, setShowScore] = useState(false);
+	const [score, setScore] = useState(0);
+    //could use ths to check everyone is finished
+    const [complete, setComplete] = useState(true);
 
-
-    //     const fetchQuestions = async() => {
-    //         try {
-    //           console.log(`grabbing from API`)
-    //           const data = await axios.get("https://opentdb.com/api.php?amount=10&category=9&difficulty=medium&type=multiple")
-    //           console.log(data)
-    //           var questions = data.data.results
-    //           setQuestionsData(questions)
-              
-    //         } catch (error) {
-    //           console.log(error)           
-    //         }
-    //     }
-    //     fetchQuestions()
-    // }, [])
-
-    //NEW WAY TO GET QUESTIONS - DELIVERED VIA SOCKETS FROM SERVER
-    useEffect(() => {
-        socket.emit("getQuestions", roomName)
-
-        socket.on("questions", (data, host) => {
-            setQuestionsData(data)
+    const postToDB = async () => {
+        await axios.post('https://quizzy-rascal-server.herokuapp.com/players/', {
+            name: gameDetails.playerName,
+            highScore: score,
+            category: gameDetails.category
+        },{
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                }
         })
-      }, [roomName])
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+    }
 
 
-    const renderQuestions = questionsData.map((question, index) => {
-        var choice= [question.correct_answer]
-        const wrong = question.incorrect_answers
-        wrong.forEach((item) => {
-            choice.push(item)
-        })
 
-        let shuffledChoice = choice.sort(function() {
-            return Math.random() - 0.5;
-        })
+    const handleNextQuestion = () => {
+        const nextQuestion = currentQuestion + 1;
+		if (nextQuestion < questions.length) {
+			setCurrentQuestion(nextQuestion);
+		} else {
+			setShowScore(true);
+            postToDB();
+		}
+    }
 
-        const checkCorrectness = (event) => {
-            if ( event.target.textContent === question.correct_answer){
-                console.log(`Correct Answer!`)
-                
-                
-            } else {
-                console.log(`Incorrect Answer!`)
-            }
-        }
+	const handleAnswerOptionClick = (isCorrect) => {
+		if (isCorrect) {
+			setScore(score + 1);
+		}
 
-        
-
-        const renderChoice = shuffledChoice.map((item, index) => {
-
-            const handleUserSelection = (event) => {
-            
-                var otherChoice = document.querySelectorAll('.selected')
-                otherChoice.forEach(choice => {
-                    choice.classList.remove('selected');
-                })
-                
-                // otherChoice.classList.value = 'choice'
-                event.target.classList.toggle('selected')
-                let className = event.target.classList.value
-                // const choice = event.target.textContent
-                console.log(className)
-                
-                // if (className === 'choice selected') {setQ1Choice(choice)}
-                // console.log(q1choice)
-                // console.log(question.correct_answer)
-                
-                
-            }
-
-
-            return(
-                <Grid item xs={6} key={index}  >
-                    <motion.div
-                    onTap={handleUserSelection}
-                    className='choice'
-                    onClick={checkCorrectness}
-                    >{item}</motion.div>
-                </Grid>
-            )
-        })
-
-        return(
-            <div className="question-container" key={index}>
-                <h1>Question {index+1}</h1>
-                <div className="question-card">
-                    <h2 style={{textAlign: 'center'}}>{question.question}</h2>
-                    <p style={{color: 'aliceblue'}}>Correct: {question.correct_answer}</p>
-
-
-                    <form action="">
-                    <Grid container className='grid' rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                        {renderChoice}
-                    </Grid>
-                    </form>
-
-                </div>
-            </div>
-        )
-    }) 
+        handleNextQuestion()
+	};
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setTicks(ticks => ticks + 1);
+            handleNextQuestion()
         }, 10000)
         return() => clearInterval(interval)
     })
 
-
-  return (
-    <main className="questions-section">
-      {renderQuestions[ticks]}
-      <Grid container sx={{display: 'flex', justifyContent: 'center'}} textAlign="center">
-        <Button variant="contained" justifyContent='center' size="large" endIcon={<SendIcon />}
-        // onClick={}
-        >
-            Submit
-        </Button>
-      </Grid>
-    </main>
-  )
-};
+	return (
+        <div className="questionBody">
+            <div className='app'>
+                {showScore ? (
+                    <div className='score-section'>
+                        <h2>{gameDetails.playerName}, you scored {score} out of {questions.length} in Category {gameDetails.category}</h2>
+                        {/* may want an extra results page to show what everyone in the room got - but will need to update scores in class first */}
+                        {(complete) ? <button onClick={() => navigate('/scoreboard', {state: {gameDetails}})}>Go to results</button> : <h3>Please wait for all players to finish.</h3>}
+                    </div>
+                ) : (
+                    <>
+                        <div className='question-section'>
+                            <div className='question-count'>
+                                <span>Question {currentQuestion + 1}</span>/{questions.length}
+                            </div>
+                            <div className='question-text'>{questions[currentQuestion].questionText}</div>
+                        </div>
+                        <div className='answer-section'>
+                            {questions[currentQuestion].answerOptions.map((answerOption, idx) => (
+                                <button key={idx} onClick={() => handleAnswerOptionClick(answerOption.isCorrect)}>{answerOption.answerText}</button>
+                            ))}
+                        </div>
+                    </>
+                )}
+            </div>
+        </div>
+	);
+}
 
 export default Questions;
