@@ -22,23 +22,22 @@ const Questions = () => {
     const [pointsUpdate, setPointsUpdate] = useState([])
 
     const postToDB = async () => {
-        await axios.post('https://quizzy-rascal-server.herokuapp.com/players', {
-
-            name: gameDetails.playerName,
-            highScore: score,
-            category: gameDetails.category
-        },{
-                headers: {
-                  'Content-Type': 'application/json'
-
-                }
-        })
-          .then(function (response) {
-            console.log(response);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+        console.log("post to DB")
+        // await axios.post('https://quizzy-rascal-server.herokuapp.com/players', {
+        //     name: gameDetails.playerName,
+        //     highScore: score,
+        //     category: gameDetails.category
+        // },{
+        //         headers: {
+        //           'Content-Type': 'application/json'
+        //         }
+        // })
+        //   .then(function (response) {
+        //     console.log(response);
+        //   })
+        //   .catch(function (error) {
+        //     console.log(error);
+        //   });
     }
 
 
@@ -55,7 +54,7 @@ const Questions = () => {
 
     // }
 
-	const handleAnswerOptionClick = (isCorrect, event) => {  
+	const handleAnswerOptionClick = (isCorrect, event) => {
         var otherChoice = document.querySelectorAll('.selected')
         otherChoice.forEach(choice => {
             choice.classList.remove('selected');
@@ -64,6 +63,8 @@ const Questions = () => {
 		if (isCorrect) {
 			setScore(score + 1);
 		}
+        const buttons = document.getElementsByTagName("button");
+        for (const button of buttons) {button.disabled = true;}
     }
 
 	// 	const nextQuestion = currentQuestion + 1;
@@ -114,25 +115,26 @@ const Questions = () => {
                     //     {/* may want an extra results page to show what everyone in the room got - but will need to update scores in class first */}
                     //     {(complete) ? <button onClick={() => navigate('/results', {state: {gameDetails}})}>Go to results</button> : <h3>Please wait for all players to finish.</h3>}
                     // </div>
-                    <div className='score-section'>
-
-                       <h2>Latest Scores</h2> 
-                       {pointsUpdate.sort((a, b) => b.score - a.score).map((result, index) => {
-                        return(
-                        <div key={index} className="position">
-                          <div>Placed: {index+1} </div>
-                          <br/>
-                          <div className="winner" >
-                            <h4>{result.playerName}</h4>
-                            <h5>{result.score} / 10</h5>
-                          </div>
+                    <div className='question-section'>
+                       <div>
+                            <span>Latest scores...</span>
                         </div>
-                      )})}
-
-             
-
+                        <div className='results'>
+                            {pointsUpdate.sort((a, b) => b.score - a.score).map((result, index) => {
+                                return(
+                                <div key={index} className="position">
+                                <div>Placed: {index+1} </div>
+                                <br/>
+                                <div className="winner" >
+                                    <h4>{result.playerName}</h4>
+                                    <h5>{result.score} / 10</h5>
+                                </div>
+                                </div>
+                                )})}
+                        </div>
                     </div>
                 ) : (
+                    
                     <>
                         <div className='question-section'>
                             <div className='question-count'>
@@ -143,7 +145,8 @@ const Questions = () => {
                         </div>
                         <div className='answer-section'>
                             {questions[ticks].answerOptions.map((answerOption, idx) => (
-                                <button className='choice' key={idx} onClick={(event) => handleAnswerOptionClick(answerOption.isCorrect, event)}>{answerOption.answerText}</button>
+                                <button className='choice' style={{disabled:false}} key={idx} onClick={(event) => handleAnswerOptionClick(answerOption.isCorrect, event)}>{answerOption.answerText}</button>
+
                             ))}
                         </div>
                     </>

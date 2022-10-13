@@ -265,7 +265,7 @@ const Home = () => {
                     onChange={handleChangeType}
                   >
                     <MenuItem value={'multiple'}>Multiple Choice</MenuItem>
-                    <MenuItem value={'boolean'}>True/ False</MenuItem>
+                    {/* <MenuItem value={'boolean'}>True/ False</MenuItem> */}
                   </Select>
                 </FormControl>
 
