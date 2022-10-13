@@ -40,6 +40,7 @@ const Questions = () => {
         //   });
     }
 
+
     // const sendScore =() => {
 
     //     socket.emit("record", score, gameDetails, (res) => {
@@ -50,8 +51,6 @@ const Questions = () => {
                 
     //         }
     //     })
-        
-    
 
     // }
 
@@ -61,10 +60,6 @@ const Questions = () => {
             choice.classList.remove('selected');
         })
         event.target.classList.toggle('selected')
-		if (isCorrect) {
-			setScore(score + 1);
-		}
-
 		if (isCorrect) {
 			setScore(score + 1);
 		}
@@ -111,7 +106,6 @@ const Questions = () => {
     }, 1000)
     return() => clearInterval(timer)
     })
-    
 	return (
         <div className="questionBody">
             <div className='app'>
@@ -152,6 +146,7 @@ const Questions = () => {
                         <div className='answer-section'>
                             {questions[ticks].answerOptions.map((answerOption, idx) => (
                                 <button className='choice' style={{disabled:false}} key={idx} onClick={(event) => handleAnswerOptionClick(answerOption.isCorrect, event)}>{answerOption.answerText}</button>
+
                             ))}
                         </div>
                     </>

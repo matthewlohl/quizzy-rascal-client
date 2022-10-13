@@ -105,6 +105,13 @@
     background-color: #2f922f;
     border: 5px solid #2f922f;
   }
+
+  .choice.selected{
+    background-color: #2F922F;
+    outline: none;
+    color: #ffffff;
+    border: #2F922F solid 5px;
+  }
   
   button svg {
     margin-right: 5px;
