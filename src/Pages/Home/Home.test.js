@@ -105,4 +105,12 @@ describe('Home Page', () => {
         // await userEvent.type(nameInput, "Jonathan{enter}")
         // expect(nameInput).toHaveBeenCalledWith("Mary")
     })
+
+    it('brings user to lobby', ()=> {
+        const handleCreateGame = jest.fn()
+        render(<Home onSubmit={handleCreateGame} />)
+
+        fireEvent.click(getByText('Create Game'))
+        expect(handleJoinGame).toBeCalled()
+    })
 })
