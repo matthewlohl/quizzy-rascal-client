@@ -1,21 +1,44 @@
 import React, { useEffect, useState } from "react"
 import { useLocation, useNavigate } from 'react-router-dom';
 import { socket } from '../../socket/index.js';
+import axios from 'axios'
+
 
 const Results = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const gameDetails = location.state.gameDetails
+  const score = location.state.score
   const [results, setResults] = useState([])
 
   useEffect(() => {
     socket.emit("results", gameDetails.roomName)
-
+    postToDB();
     socket.on("resultsData", (players) => {
       setResults(players)
     })
 
   }, [gameDetails])
+
+  const postToDB = async () => {
+    await axios.post('https://quizzy-rascal-server.herokuapp.com/players', {
+
+        name: gameDetails.playerName,
+        highScore: score,
+        category: gameDetails.category
+    },{
+            headers: {
+              'Content-Type': 'application/json'
+
+            }
+    })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+}
 
   return (
     <div className="questionBody">
@@ -39,7 +62,7 @@ const Results = () => {
               )})}
               
               </div>
-              <div><button onClick={() => navigate('/scoreboard')}>See High Scores</button></div>
+              <div><button onClick={() => {navigate('/scoreboard')}}>See High Scores</button></div>
         </div>
       </div>
     </div>
