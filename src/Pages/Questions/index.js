@@ -78,34 +78,31 @@ const Questions = () => {
 	// };
 
     useEffect(() => {
-        socket.on('broadcastupdate', (update) => {
+        socket.once('broadcastupdate', (update) => {
             setPointsUpdate(update)
             console.log(update)
-            // setPoints(update.forEach(s => {
-            //     return(<p>{s.playerName} has {s.score} points</p>)
-            // }))
         })
         const timer = setInterval(() => {
             setSeconds(seconds => seconds + 1);
             if (ticks === 9) {
                 setTimeout(() => {
                     // sendScore();
-                    postToDB();
-                    navigate('/results', {state: {gameDetails}})
-                }, 10000)
+                    // postToDB();
+                    navigate('/results', {state: {gameDetails: gameDetails, score:score}})
+                }, 15000)
             }
             if (seconds === 10) {
-        socket.emit("updatescores", {playerName: gameDetails.playerName, score: score, roomName: gameDetails.roomName})
-        setShowScore(true)
-        setTimeout(() => {
-            setShowScore(false)
-            setSeconds(0)
-        }, 5000)
-        setTicks(ticks => ticks + 1);
-    }
-    }, 1000)
-    return() => clearInterval(timer)
-    })
+                socket.emit("updatescores", {playerName: gameDetails.playerName, score: score, roomName: gameDetails.roomName})
+                setShowScore(true)
+                setTimeout(() => {
+                    setShowScore(false)
+                    setSeconds(0)
+                }, 5000)
+                setTicks(ticks => ticks + 1);
+            }
+        }, 1000)
+        return() => clearInterval(timer)
+    },[gameDetails,navigate,score,seconds,ticks])
 	return (
         <div className="questionBody">
             <div className='app'>
