@@ -20,12 +20,14 @@ const Questions = () => {
 
     const postToDB = async () => {
         await axios.post('https://quizzy-rascal-server.herokuapp.com/players', {
+
             name: gameDetails.playerName,
             highScore: score,
             category: gameDetails.category
         },{
                 headers: {
                   'Content-Type': 'application/json'
+
                 }
         })
           .then(function (response) {
@@ -35,6 +37,7 @@ const Questions = () => {
             console.log(error);
           });
     }
+
 
     const sendScore =() => {
 
@@ -49,12 +52,14 @@ const Questions = () => {
         
     
 
+
     }
 
 	const handleAnswerOptionClick = (isCorrect) => {
 		if (isCorrect) {
 			setScore(score + 1);
 		}
+
 
 		const nextQuestion = currentQuestion + 1;
 		if (nextQuestion < questions.length) {
@@ -66,6 +71,7 @@ const Questions = () => {
 		}
 	};
 
+
 	return (
         <div className="questionBody">
             <div className='app'>
@@ -73,7 +79,9 @@ const Questions = () => {
                     <div className='score-section'>
                         <h2>{gameDetails.playerName}, you scored {score} out of {questions.length} in Category {gameDetails.category}</h2>
                         {/* may want an extra results page to show what everyone in the room got - but will need to update scores in class first */}
+
                         {(complete) ? <button onClick={() => navigate('/results', {state: {gameDetails}})}>Go to results</button> : <h3>Please wait for all players to finish.</h3>}
+
                     </div>
                 ) : (
                     <>
