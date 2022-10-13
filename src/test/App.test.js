@@ -1,16 +1,24 @@
-
+/**
+ * @jest-environment jsdom
+ */
 
 import {render, screen, within} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from '../App.js'
-import axios from 'axios';
-jest.mock('axios')
+// import axios from 'axios';
+// jest.mock('axios')
 
-axios.get.mockResolvedValue({ data: [ { latlng: [123, 456] }]})
+// axios.get.mockResolvedValue({ data: [ { latlng: [123, 456] }]})
 global.React = React;
 
 describe('App', () => {
     beforeEach(() => {render(<App />)
+    })
+
+    it('it has instructions', () => {
+        
+        const header = screen.queryByRole('Instructions')
+        expect(header).toHaveTextContent('Instructions')
     })
 
     // test('renders story headlines', () => {

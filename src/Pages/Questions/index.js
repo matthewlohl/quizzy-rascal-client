@@ -23,12 +23,14 @@ const Questions = () => {
 
     const postToDB = async () => {
         await axios.post('https://quizzy-rascal-server.herokuapp.com/players', {
+
             name: gameDetails.playerName,
             highScore: score,
             category: gameDetails.category
         },{
                 headers: {
                   'Content-Type': 'application/json'
+
                 }
         })
           .then(function (response) {
@@ -38,6 +40,7 @@ const Questions = () => {
             console.log(error);
           });
     }
+
 
     // const sendScore =() => {
 
@@ -49,8 +52,6 @@ const Questions = () => {
                 
     //         }
     //     })
-        
-    
 
     // }
 
@@ -99,7 +100,6 @@ const Questions = () => {
     }, 1000)
     return() => clearInterval(timer)
     })
-    
 	return (
         <div className="questionBody">
             <div className='app'>
@@ -110,6 +110,7 @@ const Questions = () => {
                     //     {(complete) ? <button onClick={() => navigate('/results', {state: {gameDetails}})}>Go to results</button> : <h3>Please wait for all players to finish.</h3>}
                     // </div>
                     <div className='score-section'>
+
                        <h2>Latest Scores</h2> 
                        {pointsUpdate.sort((a, b) => b.score - a.score).map((result, index) => {
                         return(
@@ -123,7 +124,7 @@ const Questions = () => {
                         </div>
                       )})}
 
-                    
+             
 
                     </div>
                 ) : (
