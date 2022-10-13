@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios'
+import { socket } from '../../socket/index.js';
 
 import './index.css';
 // import { render } from "@testing-library/react";
@@ -18,13 +19,15 @@ const Questions = () => {
     const [complete, setComplete] = useState(true);
 
     const postToDB = async () => {
-        await axios.post('https://quizzy-rascal-server.herokuapp.com/players/', {
+        await axios.post('https://quizzy-rascal-server.herokuapp.com/players', {
+
             name: gameDetails.playerName,
             highScore: score,
             category: gameDetails.category
         },{
                 headers: {
-                  'Content-Type': 'multipart/form-data'
+                  'Content-Type': 'application/json'
+
                 }
         })
           .then(function (response) {
@@ -36,15 +39,20 @@ const Questions = () => {
     }
 
 
+    const sendScore =() => {
 
-    const handleNextQuestion = () => {
-        const nextQuestion = currentQuestion + 1;
-		if (nextQuestion < questions.length) {
-			setCurrentQuestion(nextQuestion);
-		} else {
-			setShowScore(true);
-            postToDB();
-		}
+        socket.emit("record", score, gameDetails, (res) => {
+        
+
+            if (res.code === "success") {
+                console.log('Response from server via sockets', res);
+                
+            }
+        })
+        
+    
+
+
     }
 
 	const handleAnswerOptionClick = (isCorrect) => {
@@ -52,15 +60,17 @@ const Questions = () => {
 			setScore(score + 1);
 		}
 
-        handleNextQuestion()
+
+		const nextQuestion = currentQuestion + 1;
+		if (nextQuestion < questions.length) {
+			setCurrentQuestion(nextQuestion);
+		} else {
+			setShowScore(true);
+            sendScore();
+            postToDB();
+		}
 	};
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            handleNextQuestion()
-        }, 10000)
-        return() => clearInterval(interval)
-    })
 
 	return (
         <div className="questionBody">
@@ -69,7 +79,9 @@ const Questions = () => {
                     <div className='score-section'>
                         <h2>{gameDetails.playerName}, you scored {score} out of {questions.length} in Category {gameDetails.category}</h2>
                         {/* may want an extra results page to show what everyone in the room got - but will need to update scores in class first */}
-                        {(complete) ? <button onClick={() => navigate('/scoreboard', {state: {gameDetails}})}>Go to results</button> : <h3>Please wait for all players to finish.</h3>}
+
+                        {(complete) ? <button onClick={() => navigate('/results', {state: {gameDetails}})}>Go to results</button> : <h3>Please wait for all players to finish.</h3>}
+
                     </div>
                 ) : (
                     <>
