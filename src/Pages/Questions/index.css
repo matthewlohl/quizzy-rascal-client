@@ -100,6 +100,13 @@
   button:focus {
     outline: none;
   }
+
+  .choice.selected{
+    background-color: #2F922F;
+    outline: none;
+    color: #ffffff;
+    border: #2F922F solid 5px;
+  }
   
   button svg {
     margin-right: 5px;
