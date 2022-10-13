@@ -55,7 +55,12 @@ const Questions = () => {
 
     // }
 
-	const handleAnswerOptionClick = (isCorrect) => {
+	const handleAnswerOptionClick = (isCorrect, event) => {  
+        var otherChoice = document.querySelectorAll('.selected')
+        otherChoice.forEach(choice => {
+            choice.classList.remove('selected');
+        })
+        event.target.classList.toggle('selected')
 		if (isCorrect) {
 			setScore(score + 1);
 		}
@@ -138,7 +143,7 @@ const Questions = () => {
                         </div>
                         <div className='answer-section'>
                             {questions[ticks].answerOptions.map((answerOption, idx) => (
-                                <button key={idx} onClick={() => handleAnswerOptionClick(answerOption.isCorrect)}>{answerOption.answerText}</button>
+                                <button className='choice' key={idx} onClick={(event) => handleAnswerOptionClick(answerOption.isCorrect, event)}>{answerOption.answerText}</button>
                             ))}
                         </div>
                     </>
