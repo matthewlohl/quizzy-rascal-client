@@ -88,6 +88,7 @@ const Home = () => {
       difficulty: difficulty,
       type: type,
       category: category
+
     }
 
     // implement check room name is available
@@ -123,7 +124,7 @@ const Home = () => {
     <div>
       <Nav />
       <section className="instructions">
-        <h1>Instructions</h1>
+        <h1 role='Instructions'>Instructions</h1>
         <h3>
             <ol>
                 <li>Select a mode</li>
