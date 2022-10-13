@@ -1,75 +1,156 @@
-import { Grid } from "@mui/material";
-import axios from "axios";
-import React, { useEffect, useState } from "react"
-import { motion } from "framer-motion"
-import './style.css'
+import React, { useState, useEffect } from "react"
+import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios'
+import { socket } from '../../socket/index.js';
 
+import './index.css';
+// import { render } from "@testing-library/react";
 
 const Questions = () => {
-    const [questionsData, setQuestionsData] = useState([])
+    const location = useLocation();
+    const navigate = useNavigate();
+    const questions = location.state.data
+    const gameDetails = location.state.gameDetails
 
+	// const [currentQuestion, setCurrentQuestion] = useState(0);
+	const [showScore, setShowScore] = useState(false);
+	const [score, setScore] = useState(0);
+    //could use ths to check everyone is finished
+
+    const [ticks, setTicks] = useState(0);
+    const [seconds, setSeconds] = useState(0);
+    const [pointsUpdate, setPointsUpdate] = useState([])
+
+    const postToDB = async () => {
+        await axios.post('https://quizzy-rascal-server.herokuapp.com/players', {
+
+            name: gameDetails.playerName,
+            highScore: score,
+            category: gameDetails.category
+        },{
+                headers: {
+                  'Content-Type': 'application/json'
+
+                }
+        })
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+    }
+
+
+    // const sendScore =() => {
+
+    //     socket.emit("record", score, gameDetails, (res) => {
+        
+
+    //         if (res.code === "success") {
+    //             console.log('Response from server via sockets', res);
+                
+    //         }
+    //     })
+
+    // }
+
+	const handleAnswerOptionClick = (isCorrect, event) => {  
+        var otherChoice = document.querySelectorAll('.selected')
+        otherChoice.forEach(choice => {
+            choice.classList.remove('selected');
+        })
+        event.target.classList.toggle('selected')
+		if (isCorrect) {
+			setScore(score + 1);
+		}
+    }
+
+	// 	const nextQuestion = currentQuestion + 1;
+	// 	if (nextQuestion < questions.length) {
+	// 		setCurrentQuestion(nextQuestion);
+	// 	} else {
+	// 		setShowScore(true);
+    //         sendScore();
+    //         postToDB();
+	// 	}
+	// };
 
     useEffect(() => {
-        const fetchQuestions = async() => {
-            try {
-              console.log(`grabbing from API`)
-              const data = await axios.get(`https://opentdb.com/api.php?amount=10`)
-              var questions = data.data.results
-              setQuestionsData(questions)
-              
-            } catch (error) {
-              console.log(error)           
+        socket.on('broadcastupdate', (update) => {
+            setPointsUpdate(update)
+            console.log(update)
+            // setPoints(update.forEach(s => {
+            //     return(<p>{s.playerName} has {s.score} points</p>)
+            // }))
+        })
+        const timer = setInterval(() => {
+            setSeconds(seconds => seconds + 1);
+            if (ticks === 9) {
+                setTimeout(() => {
+                    // sendScore();
+                    postToDB();
+                    navigate('/results', {state: {gameDetails}})
+                }, 10000)
             }
-        }
-        fetchQuestions()
-    }, [])
+            if (seconds === 10) {
+        socket.emit("updatescores", {playerName: gameDetails.playerName, score: score, roomName: gameDetails.roomName})
+        setShowScore(true)
+        setTimeout(() => {
+            setShowScore(false)
+            setSeconds(0)
+        }, 5000)
+        setTicks(ticks => ticks + 1);
+    }
+    }, 1000)
+    return() => clearInterval(timer)
+    })
+	return (
+        <div className="questionBody">
+            <div className='app'>
+                {showScore ? (
+                    // <div className='score-section'>
+                    //     <h2>{gameDetails.playerName}, you scored {score} out of {questions.length} in Category {gameDetails.category}</h2>
+                    //     {/* may want an extra results page to show what everyone in the room got - but will need to update scores in class first */}
+                    //     {(complete) ? <button onClick={() => navigate('/results', {state: {gameDetails}})}>Go to results</button> : <h3>Please wait for all players to finish.</h3>}
+                    // </div>
+                    <div className='score-section'>
 
+                       <h2>Latest Scores</h2> 
+                       {pointsUpdate.sort((a, b) => b.score - a.score).map((result, index) => {
+                        return(
+                        <div key={index} className="position">
+                          <div>Placed: {index+1} </div>
+                          <br/>
+                          <div className="winner" >
+                            <h4>{result.playerName}</h4>
+                            <h5>{result.score} / 10</h5>
+                          </div>
+                        </div>
+                      )})}
 
-    const renderQuestions = questionsData.map((question, index) => {
-        var choice= [question.correct_answer]
-        const wrong = question.incorrect_answers
-        wrong.forEach((item) => {
-            choice.push(item)
-        })
+             
 
-        let shuffledChoice = choice.sort(function() {
-            return Math.random() - 0.5;
-        })
-        const renderChoice = shuffledChoice.map((item, index) => {
-            return(
-                <Grid item xs={6} key={index}>
-                    <motion.div whileHover={{ scale: 1.1, backgroundColor: '#6A5AE0', color: 'aliceblue'}} transition={{ type: "spring", stiffness: 100, damping: 10 }} className="choice">{item}</motion.div>
-                </Grid>
-            )
-        })
-
-        return(
-            <div className="question-container" key={index}>
-                <h1>Question {index+1}</h1>
-                <div className="question-card">
-                    <h2 style={{textAlign: 'center'}}>{question.question}</h2>
-                    {/* <p>{shuffledChoice}</p> */}
-                    <p style={{color: 'aliceblue'}}>Correct: {question.correct_answer}</p>
-                    {/* <p>Wrong: {question.incorrect_answers}</p> */}
-
-                    <form action="">
-                    <Grid container className='grid' rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                        {renderChoice}
-                    </Grid>
-                    </form>
-
-                </div>
+                    </div>
+                ) : (
+                    <>
+                        <div className='question-section'>
+                            <div className='question-count'>
+                                <span>Question {ticks + 1}</span>/{questions.length}
+                            </div>
+                            <div className='question-text'>{questions[ticks].questionText}</div>
+                            <div className='timer'>{10 - seconds}</div>
+                        </div>
+                        <div className='answer-section'>
+                            {questions[ticks].answerOptions.map((answerOption, idx) => (
+                                <button className='choice' key={idx} onClick={(event) => handleAnswerOptionClick(answerOption.isCorrect, event)}>{answerOption.answerText}</button>
+                            ))}
+                        </div>
+                    </>
+                )}
             </div>
-        )
-    }) 
-    
-
-  return (
-    <main className="questions-section">
-      {renderQuestions}
-     
-    </main>
-  )
-};
+        </div>
+	);
+}
 
 export default Questions;
