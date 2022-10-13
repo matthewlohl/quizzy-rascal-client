@@ -81,7 +81,7 @@
     padding: 5px;
     justify-content: flex-start;
     align-items: center;
-    border: 5px solid #234668;
+    border: 5px solid #252d4a;
     cursor: pointer;
   }
   
@@ -92,13 +92,18 @@
   .incorrect {
     background-color: #ff3333;
   }
-  
-  button:hover {
-    background-color: #555e7d;
+
+  .choice.selected{
+    background-color: #2F922F;
+    outline: none;
+    color: #ffffff;
+    border: #2F922F solid 5px;
   }
   
   button:focus {
     outline: none;
+    background-color: #2f922f;
+    border: 5px solid #2f922f;
   }
   
   button svg {
