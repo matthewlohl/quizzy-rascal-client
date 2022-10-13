@@ -124,7 +124,7 @@ const Home = () => {
     <div>
       <Nav />
       <section className="instructions">
-        <h1 role='Instructions'>Instructions</h1>
+        <h1 data-testid='Instructions'>Instructions</h1>
         <h3>
             <ol>
                 <li>Select a mode</li>

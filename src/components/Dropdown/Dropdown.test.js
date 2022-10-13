@@ -11,7 +11,7 @@ describe('Drop Down', () => {
     })
 
     it('it has an option to select', () => {
-        const option = screen.getByRole('option')
+        const option = screen.getByTestId('option')
         expect(option).toBeInTheDocument
     })
 })

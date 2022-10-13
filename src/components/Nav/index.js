@@ -13,7 +13,7 @@ const Nav = () => {
       style={{alignItems: 'center', justifyContent: 'center'}}
       >
         <Avatar alt="logo" src={logo} role="Logo" style={{width: 100, height: 100}}/>
-        <p role="siteName" style={{color: 'gray', fontWeight: '500', textTransform: 'uppercase'}} >Quizzy Rascal</p>
+        <p data-testid="siteName" style={{color: 'gray', fontWeight: '500', textTransform: 'uppercase'}} >Quizzy Rascal</p>
       </Grid>
 
      

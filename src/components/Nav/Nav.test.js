@@ -9,7 +9,7 @@ import Nav from '.';
 describe('NAV', () => {
     test('it renders the site name', () => {
         render(<Nav />, {wrapper: MemoryRouter});
-        const siteNameTag = screen.queryByRole('siteName');
+        const siteNameTag = screen.getByTestId('siteName');
         const siteName = siteNameTag.textContent
         expect(siteName).toBe('Quizzy Rascal');
 

@@ -15,7 +15,7 @@ describe('Home Page', () => {
 
     it('it has instructions', () => {
         
-        const header = screen.queryByRole('Instructions')
+        const header = screen.getByTestId('Instructions')
         expect(header).toHaveTextContent('Instructions')
     })
 
